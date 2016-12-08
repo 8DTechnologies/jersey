@@ -71,8 +71,8 @@ public class InheritanceTest extends JerseyTest {
         ResourceConfig config = new ResourceConfig(Resource.class);
         config.register(WriterA.class);
         config.register(WriterB.class);
-        config.register(WriterString.class);
-        config.register(WriterD.class);
+        config.register(WriterString.class).register(WriterD.class)
+                .register(WriterObject.class);config.register(WriterD.class);
         config.register(WriterObject.class);
         return config;
     }
@@ -100,17 +100,17 @@ public class InheritanceTest extends JerseyTest {
             super("b" + value);
         }
     }
-
+    
     public interface C extends D {
-
+        
     }
-
+    
     public interface D {
-
+        
     }
-
+    
     public static class ClassImplementingD implements D {
-
+        
     }
 
     public static class ClassImplementingC implements C {
@@ -121,19 +121,19 @@ public class InheritanceTest extends JerseyTest {
     public static class Resource {
 
         @GET
-        @Path("a")
+        @Path( "a" )
         public A getA() {
             return new B("a");
         }
 
         @GET
-        @Path("ClassImplementingC")
+        @Path( "ClassImplementingC")
         public ClassImplementingC getClassImplementingC() {
             return new ClassImplementingC();
         }
 
         @GET
-        @Path("ClassImplementingD")
+        @Path( "ClassImplementingD")
         public ClassImplementingD getClassImplementingD() {
             return new ClassImplementingD();
         }
@@ -269,15 +269,15 @@ public class InheritanceTest extends JerseyTest {
     public void testWriterEntityInheritance() throws Exception {
         assertThat(target().path("a").request("a/b").get(String.class), equalTo("aba"));
     }
-
+    
     @Test
     public void testWriterEntityInterfaceOneDeep() throws Exception {
-        assertThat(target().path("ClassImplementingD").request().get(String.class), equalTo("d"));
+        assertThat(target().path( "ClassImplementingD" ).request().get(String.class), equalTo("d"));
     }
 
     @Test
     public void testWriterEntityInterfaceTwoDeep() throws Exception {
-        assertThat(target().path("ClassImplementingC").request().get(String.class), equalTo("d"));
+        assertThat(target().path( "ClassImplementingC" ).request().get(String.class), equalTo("d"));
     }
-
+    
 }
