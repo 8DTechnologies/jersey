@@ -68,13 +68,12 @@ public class InheritanceTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        ResourceConfig config = new ResourceConfig(Resource.class);
-        config.register(WriterA.class);
-        config.register(WriterB.class);
-        config.register(WriterString.class).register(WriterD.class)
-                .register(WriterObject.class);config.register(WriterD.class);
-        config.register(WriterObject.class);
-        return config;
+        return new ResourceConfig(Resource.class)
+                .register(WriterA.class)
+                .register(WriterB.class)
+                .register(WriterString.class)
+                .register(WriterD.class)
+                .register(WriterObject.class);
     }
 
     public static class A {
@@ -267,7 +266,7 @@ public class InheritanceTest extends JerseyTest {
 
     @Test
     public void testWriterEntityInheritance() throws Exception {
-        assertThat(target().path("a").request("a/b").get(String.class), equalTo("aba"));
+        assertThat(target().path( "a" ).request("a/b").get(String.class), equalTo("aba"));        
     }
     
     @Test
