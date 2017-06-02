@@ -68,7 +68,13 @@ public class InheritanceTest extends JerseyTest {
 
     @Override
     protected Application configure() {
-        return new ResourceConfig(Resource.class).register(WriterA.class).register(WriterB.class).register(WriterString.class);
+        ResourceConfig config = new ResourceConfig(Resource.class);
+        config.register(WriterA.class);
+        config.register(WriterB.class);
+        config.register(WriterString.class);
+        config.register(WriterD.class);
+        config.register(WriterObject.class);
+        return config;
     }
 
     public static class A {
@@ -95,12 +101,41 @@ public class InheritanceTest extends JerseyTest {
         }
     }
 
+    public interface C extends D {
+
+    }
+
+    public interface D {
+
+    }
+
+    public static class ClassImplementingD implements D {
+
+    }
+
+    public static class ClassImplementingC implements C {
+
+    }
+
     @Path("/")
     public static class Resource {
 
         @GET
+        @Path("a")
         public A getA() {
             return new B("a");
+        }
+
+        @GET
+        @Path("ClassImplementingC")
+        public ClassImplementingC getClassImplementingC() {
+            return new ClassImplementingC();
+        }
+
+        @GET
+        @Path("ClassImplementingD")
+        public ClassImplementingD getClassImplementingD() {
+            return new ClassImplementingD();
         }
     }
 
@@ -176,8 +211,73 @@ public class InheritanceTest extends JerseyTest {
         }
     }
 
+    @Produces("*/*")
+    public static class WriterD implements MessageBodyWriter<D> {
+
+        @Override
+        public boolean isWriteable(final Class<?> type, final Type genericType, final Annotation[] annotations,
+                final MediaType mediaType) {
+            return D.class.isAssignableFrom(type);
+        }
+
+        @Override
+        public long getSize(final D d, final Class<?> type, final Type genericType, final Annotation[] annotations,
+                final MediaType mediaType) {
+            return -1;
+        }
+
+        @Override
+        public void writeTo(final D d,
+                final Class<?> type,
+                final Type genericType,
+                final Annotation[] annotations,
+                final MediaType mediaType,
+                final MultivaluedMap<String, Object> httpHeaders,
+                final OutputStream entityStream) throws IOException, WebApplicationException {
+            entityStream.write(("d").getBytes());
+        }
+    }
+
+    @Produces("*/*")
+    public static class WriterObject implements MessageBodyWriter<Object> {
+
+        @Override
+        public boolean isWriteable(final Class<?> type, final Type genericType, final Annotation[] annotations,
+                final MediaType mediaType) {
+            return D.class.isAssignableFrom(type);
+        }
+
+        @Override
+        public long getSize(final Object o, final Class<?> type, final Type genericType, final Annotation[] annotations,
+                final MediaType mediaType) {
+            return -1;
+        }
+
+        @Override
+        public void writeTo(final Object o,
+                final Class<?> type,
+                final Type genericType,
+                final Annotation[] annotations,
+                final MediaType mediaType,
+                final MultivaluedMap<String, Object> httpHeaders,
+                final OutputStream entityStream) throws IOException, WebApplicationException {
+            entityStream.write(("Object").getBytes());
+        }
+    }
+
     @Test
     public void testWriterEntityInheritance() throws Exception {
-        assertThat(target().request("a/b").get(String.class), equalTo("aba"));
+        assertThat(target().path("a").request("a/b").get(String.class), equalTo("aba"));
     }
+
+    @Test
+    public void testWriterEntityInterfaceOneDeep() throws Exception {
+        assertThat(target().path("ClassImplementingD").request().get(String.class), equalTo("d"));
+    }
+
+    @Test
+    public void testWriterEntityInterfaceTwoDeep() throws Exception {
+        assertThat(target().path("ClassImplementingC").request().get(String.class), equalTo("d"));
+    }
+
 }
