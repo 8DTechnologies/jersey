@@ -322,7 +322,7 @@
                             <exclude>bundles/**</exclude>
                             <fileExclude>module-info.java</fileExclude>
                         </sourceFileExcludes>
-                        <verbose />
+                        <verbose/>
                         <additionalparam>-Xdoclint:none</additionalparam>
                         <maxmemory>256m</maxmemory>
                     </configuration>
@@ -918,7 +918,7 @@
         <profile>
             <id>securityOff</id>
             <properties>
-                <surefire.security.argline />
+                <surefire.security.argline/>
             </properties>
         </profile>
         <profile>
@@ -1811,7 +1811,7 @@
         <findbugs.threshold>Low</findbugs.threshold>
         <!-- the exclude file cannot be here directly, as FindBugs would interpret the path as relative to
         each module; the default exclude filter file is at etc/config/findbugs-exclude.xml -->
-        <findbugs.exclude />
+        <findbugs.exclude/>
         <findbugs.glassfish.logging.validLoggerPrefixes>
             javax.enterprise
         </findbugs.glassfish.logging.validLoggerPrefixes>
@@ -1823,11 +1823,11 @@
         <release.tests.args>-Dmaven.test.skip=false</release.tests.args>
         <release.preparationGoals>clean install</release.preparationGoals>
         <skip.tests>false</skip.tests>
-        <xdk.absolute.path />
-        <surefire.security.argline />
-        <surefire.coverage.argline />
+        <xdk.absolute.path/>
+        <surefire.security.argline/>
+        <surefire.coverage.argline/>
         <surefire.maxmem.argline>1024</surefire.maxmem.argline>
-        <failsafe.coverage.argline />
+        <failsafe.coverage.argline/>
         <server.coverage.argline>${failsafe.coverage.argline}</server.coverage.argline>
 
 
@@ -1857,7 +1857,7 @@
         <xmlunit.version>1.6</xmlunit.version>
         <hk2.version>2.5.0-b36</hk2.version>
         <httpclient.version>4.5</httpclient.version> <!-- TODO: 4.5.2 doesn't work; apache client connector tests -->
-        <jackson.version>2.8.4</jackson.version>
+        <jackson.version>2.10.0</jackson.version>
         <jackson1.version>1.9.13</jackson1.version>
         <javassist.version>3.20.0-GA</javassist.version>
         <javax.annotation.version>1.2</javax.annotation.version>
